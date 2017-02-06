@@ -473,7 +473,7 @@ class Controller(object):
             self._send_dhcp_notification(request.context,
                                          create_result,
                                          notifier_method)
-            if self._resource in ('port') and ec2utils.is_paas(request.context,None) :
+            if self._resource in ('port') and ec2utils.is_paas(request.context,None) and request.context.is_admin :
                 LOG.debug("need to add pni entry in ec2db")
                 LOG.debug(create_result)
 		ec2utils.create_pni(request.context, create_result['port']['id'])
