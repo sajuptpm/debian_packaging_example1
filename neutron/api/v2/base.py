@@ -345,6 +345,11 @@ class Controller(object):
             LOG.debug (orig_items)
             return { 'ports' : orig_items}
 
+        if self._resource in ('network') and ec2utils.is_paas(request.context,None) :
+            request.context.is_admin = True
+            if 'id' in request.GET:
+                LOG.debug('Specific network request')
+                return self._items(request, False, parent_id)
 
 
 
@@ -586,18 +591,18 @@ class Controller(object):
                            orig_obj,
                            pluralized=self._collection)
         except common_policy.PolicyNotAuthorized:
-            with excutils.save_and_reraise_exception() as ctxt:
-                if ec2utils.is_paas(request.context,None) :
-                    LOG.info("PAAS account Permited to update a cross account")
-                    request.context.is_admin = True
-                else :
+            if ec2utils.is_paas(request.context,None) :
+                LOG.info("PAAS account Permited to update a cross account")
+                request.context.is_admin = True
+            else :
+                with excutils.save_and_reraise_exception() as ctxt:
                     # If a tenant is modifying it's own object, it's safe to return
                     # a 403. Otherwise, pretend that it doesn't exist to avoid
                     # giving away information.
                     if request.context.tenant_id != orig_obj['tenant_id']:
                         ctxt.reraise = False
-            msg = _('The resource could not be found.')
-            raise webob.exc.HTTPNotFound(msg)
+                msg = _('The resource could not be found.')
+                raise webob.exc.HTTPNotFound(msg)
 
         obj_updater = getattr(self._plugin, action)
         kwargs = {self._resource: body}
