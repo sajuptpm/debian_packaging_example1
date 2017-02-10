@@ -337,6 +337,15 @@ class Controller(object):
             # Creatng a dummy request to get
             # get values of cross account port
             dummy_request = request
+
+
+            if dummy_request.GET  :
+                dummy_request.context.is_admin = True
+                LOG.debug(dummy_request.GET)
+                return self._items(dummy_request, False, parent_id)
+
+
+
             orig_items = self._items(dummy_request, True, parent_id)['ports']
             dummy_request.context.is_admin = True
 	    items = list_paas_ports(dummy_request)
