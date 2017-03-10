@@ -1,0 +1,28 @@
+Source: neutron
+Section: net
+Priority: optional
+Maintainer: PKG OpenStack <openstack-devel@lists.alioth.debian.org>
+Uploaders: Thomas Goirand <zigo@debian.org>, Gustavo Panizzo <gfa@zumbi.com.ar>,
+Standards-Version: 3.9.6
+Homepage: http://neutron.openstack.org/
+Vcs-Browser: http://anonscm.debian.org/gitweb/?p=openstack/neutron.git;a=summary
+Vcs-Git: git://anonscm.debian.org/openstack/neutron.git
+Build-Depends: debhelper,
+               dh-python,
+               dh-systemd,
+               openstack-pkg-tools,
+               po-debconf,
+               python-all,
+               python-pbr,
+               python-setuptools,
+               python-sphinx,
+               git,
+               python-pbr,
+XS-Python-Version: >= 2.7
+
+Package: python-neutron
+Architecture: amd64
+Section: python
+Pre-Depends: dpkg
+Description: OpenStack virtual network service - Python library
+    Neutron provides an API to dynamically request and configure virtual networks.
